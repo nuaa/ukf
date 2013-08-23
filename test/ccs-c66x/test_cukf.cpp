@@ -1,4 +1,6 @@
 #include <gtest/gtest.h>
+#include <math.h>
+#include <stdint.h>
 #include "cukf.h"
 #include "cukfmath.h"
 

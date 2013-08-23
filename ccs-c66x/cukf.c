@@ -87,8 +87,6 @@ static real_t state_covariance[UKF_STATE_DIM * UKF_STATE_DIM];
 
 /* UKF inputs */
 static real_t control[UKF_CONTROL_DIM];
-static real_t measurement[UKF_MEASUREMENT_DIM];
-static uint8_t measurement_size;
 
 /* Dynamics model configuration */
 static enum ukf_model_t dynamics_model = UKF_MODEL_NONE;
