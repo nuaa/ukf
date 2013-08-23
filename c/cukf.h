@@ -23,6 +23,8 @@ SOFTWARE.
 #ifndef INTERFACE_H
 #define INTERFACE_H
 
+#include "config.h"
+
 #ifdef UKF_SINGLE_PRECISION
 typedef float real_t;
 #endif

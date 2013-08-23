@@ -92,14 +92,6 @@ const State &in, const ControlVector &control) const {
 
     v_inv = 1.0 / v;
 
-    /*
-    Lift is always perpendicular to airflow, drag is always parallel, and
-    side is always towards the starboard wing of the aircraft.
-    */
-    drag_axis = airflow * v_inv;
-    lift_axis = drag_axis.cross(Vector3r(0, 1, 0));
-    side_axis = drag_axis.cross(lift_axis);
-
     /* Determine alpha and beta: alpha = atan(wz/wx), beta = atan(wy/|wxz|) */
     real_t alpha, beta, qbar, alpha2, beta2;
     qbar = RHO * v * v * 0.5;
@@ -190,8 +182,8 @@ const State &in, const ControlVector &control) const {
     */
     Vector3r sum_force, sum_torque;
 
-    sum_force = qbar * (lift * lift_axis + drag * drag_axis +
-                side_force * side_axis) + thrust * motor_thrust;
+    sum_force = qbar * (lift * Vector3r(0, 0, -1) + drag * Vector3r(1, 0, 0) +
+                side_force * Vector3r(0, 1, 0)) + thrust * Vector3r(-1, 0, 0);
     sum_torque = qbar * Vector3r(roll_moment, pitch_moment, yaw_moment);
 
     /* Calculate linear acceleration (F / m) */

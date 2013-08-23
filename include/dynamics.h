@@ -127,9 +127,6 @@ class FixedWingFlightDynamicsModel: public DynamicsModel {
     */
     Vector5r c_drag_alpha, c_lift_alpha;
 
-    /* Motor force direction vector in body frame */
-    Vector3r motor_thrust;
-
     /* Motor control channel index */
     int8_t motor_idx;
 
@@ -149,7 +146,6 @@ public:
         inertia_tensor_inv.setZero();
 
         motor_idx = 0;
-        motor_thrust << -1, 0, 0;
     }
 
     AccelerationVector evaluate(
