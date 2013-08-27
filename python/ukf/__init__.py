@@ -98,17 +98,17 @@ def configure_sensors(accelerometer_offset=None,
     if accelerometer_orientation is not None:
         params.accel_orientation = accelerometer_orientation
     else:
-        params.accel_orientation = (1.0, 0.0, 0.0, 0.0)
+        params.accel_orientation = (0.0, 0.0, 0.0, 1.0)
 
     if gyroscope_orientation is not None:
         params.gyro_orientation = gyroscope_orientation
     else:
-        params.gyro_orientation = (1.0, 0.0, 0.0, 0.0)
+        params.gyro_orientation = (0.0, 0.0, 0.0, 1.0)
 
     if magnetometer_orientation is not None:
         params.mag_orientation = magnetometer_orientation
     else:
-        params.mag_orientation = (1.0, 0.0, 0.0, 0.0)
+        params.mag_orientation = (0.0, 0.0, 0.0, 1.0)
 
     if wmm_field is not None:
         params.mag_field = wmm_field
@@ -198,15 +198,18 @@ def init(implementation="c"):
     # Load the requested library and determine configuration parameters
     if implementation == "c":
         lib = os.path.join(os.path.dirname(__file__), "c", "libcukf.dylib")
-    elif implementation == "ccs-c66x":
+    elif implementation == "c66x":
         lib = os.path.join(os.path.dirname(__file__), "ccs-c66x",
-                           "libcukf.dylib")
+                           "libc66ukf.dylib")
     else:
         raise NameError(
             "Unknown UKF implementation: %s (options are 'c', 'dsp')" %
             implementation)
 
     _cukf = cdll.LoadLibrary(lib)
+
+    _cukf.ukf_init.argtypes = []
+    _cukf.ukf_init.restype = None
 
     _cukf.ukf_config_get_precision.argtypes = []
     _cukf.ukf_config_get_precision.restype = c_long
@@ -358,6 +361,9 @@ def init(implementation="c"):
     _cukf.ukf_fixedwingdynamics_set_yaw_moment_coeffs.argtypes = [
         POINTER(_REAL_T * 2), POINTER(_REAL_T * _CONTROL_DIM)]
     _cukf.ukf_fixedwingdynamics_set_yaw_moment_coeffs.restype = None
+
+    # Initialize the library
+    _cukf.ukf_init()
 
     # Set up the state
     state = _State()
